@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ventura Lab</title>
+<meta name="description" content="Ventura Lab — desenvolvimento e customização TOTVS Protheus em AdvPL e TLPP. Atendimento 100% remoto.">
+<link rel="canonical" href="https://venturalab.tec.br/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://venturalab.tec.br/">
+<meta property="og:title" content="Ventura Lab · Seu Protheus, sob medida">
+<meta property="og:description" content="Desenvolvimento e customização TOTVS Protheus em AdvPL e TLPP. Rotinas, relatórios, integrações e manutenção.">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='1' y='1' width='38' height='38' rx='9' fill='%230f1e26'/%3E%3Cpath d='M10 11l10 18 10-18' fill='none' stroke='%23eef1f2' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='30' cy='29.5' r='3' fill='%23d9730d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: caderno de laboratório — papel milimetrado no hero, protocolos numerados, bancada de código interativa, briefing que vira mensagem */
+:root {
+  --bg: #eef1f2;
+  --surface: #ffffff;
+  --ink: #0f1e26;
+  --muted: #55656e;
+  --line: #cfd8dc;
+  --accent: #d9730d;
+  --accent-soft: rgba(217,115,13,.12);
+  --accent-ink: #ffffff;
+  --code-bg: #0f1e26;
+  --code-ink: #dbe6ea;
+  --grid: rgba(15,30,38,.06);
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c171d; --surface: #13232b; --ink: #e6eef1; --muted: #93a5ad;
+    --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a;
+    --code-bg: #071015; --code-ink: #dbe6ea; --grid: rgba(230,238,241,.05); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c171d; --surface: #13232b; --ink: #e6eef1; --muted: #93a5ad;
+  --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a;
+  --code-bg: #071015; --code-ink: #dbe6ea; --grid: rgba(230,238,241,.05); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; text-wrap: balance; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.mono { font-family: var(--font-mono); }
+
+/* Header */
+header.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-mark { width: 36px; height: 36px; flex: none; }
+.brand-name { font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: -0.02em; }
+.brand-name span { color: var(--accent); }
+nav.links { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; font-size: 15px; }
+nav.links a { text-decoration: none; color: var(--muted); }
+nav.links a:hover { color: var(--ink); }
+nav.links a.nav-cta { color: var(--accent-ink); background: var(--accent); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+
+/* Hero */
+.hero { position: relative; padding: 80px 0 96px; overflow: hidden;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 140px; background: linear-gradient(transparent, var(--bg)); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.tag { font-family: var(--font-mono); font-size: 13px; color: var(--muted); letter-spacing: 0.04em; display: inline-flex; gap: 10px; align-items: center; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+.tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.hero h1 { font-size: clamp(46px, 6.8vw, 90px); font-weight: 800; letter-spacing: -0.04em; margin: 22px 0 22px; }
+.hero h1 em { font-style: normal; color: var(--accent); position: relative; white-space: nowrap; }
+.hero h1 em::after { content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: .12em; background: var(--accent); opacity: .25; border-radius: 4px; }
+.hero p.lead { font-size: 19px; color: var(--muted); max-width: 34em; margin: 0 0 32px; }
+.ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none; border: 1.5px solid var(--ink); transition: transform .15s ease, box-shadow .15s ease; cursor: pointer; font-family: var(--font-body); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 24px -12px var(--accent); }
+.btn-ghost { background: var(--surface); color: var(--ink); }
+.btn:hover { transform: translateY(-2px); }
+.hero-facts { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 40px; padding-top: 24px; border-top: 1px dashed var(--line); }
+.hero-facts div { display: grid; gap: 2px; }
+.hero-facts b { font-family: var(--font-display); font-size: 22px; letter-spacing: -0.02em; }
+.hero-facts span { font-size: 14px; color: var(--muted); }
+
+/* Code window */
+.window { background: var(--code-bg); color: var(--code-ink); border-radius: 16px; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(15,30,38,.7), 0 0 0 1px rgba(255,255,255,.04) inset; }
+.window-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.08); font-family: var(--font-mono); font-size: 12px; color: #8ea3ac; flex-wrap: wrap; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: #2a3f49; display: block; }
+.dots i:first-child { background: #f08a24; }
+.window-head b { color: #f08a24; font-weight: 500; }
+.window pre { margin: 0; padding: 20px 20px 22px; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.75; overflow-x: auto; counter-reset: ln; }
+.window pre .l { display: block; }
+.window pre .l::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 2.2em; margin-right: 1em; text-align: right; color: #3d5560; }
+.window-foot { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,.08); font-family: var(--font-mono); font-size: 12px; color: #8ea3ac; flex-wrap: wrap; }
+.window-foot .ok { color: #9fd3a8; }
+.k { color: #f08a24; } .s { color: #9fd3a8; } .c { color: #6f8790; font-style: italic; } .f { color: #8cc4f0; } .n { color: #e6c07b; }
+.cursor { display: inline-block; width: 8px; height: 1.1em; background: #f08a24; vertical-align: -3px; animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Marquee */
+.marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--ink); color: var(--bg); overflow: hidden; }
+.marquee-track { display: flex; gap: 40px; padding: 16px 0; width: max-content; animation: slide 38s linear infinite; font-family: var(--font-mono); font-size: 15px; }
+.marquee-track span { white-space: nowrap; display: inline-flex; align-items: center; gap: 40px; }
+.marquee-track span::after { content: "◆"; color: var(--accent); font-size: 10px; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* Sections */
+section.block { padding: 104px 0; }
+.sec-head { display: grid; grid-template-columns: 200px 1fr; gap: 24px; margin-bottom: 52px; align-items: baseline; }
+.sec-num { font-family: var(--font-mono); font-size: 13px; color: var(--accent); letter-spacing: .06em; }
+.sec-head h2 { font-size: clamp(34px, 4.4vw, 56px); font-weight: 700; letter-spacing: -0.03em; }
+.sec-head p { grid-column: 2; color: var(--muted); margin: 14px 0 0; max-width: 40em; }
+
+/* Antes / depois */
+.cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; }
+.case .side { display: grid; gap: 6px; }
+.case .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; }
+.case .before .lbl { color: var(--muted); }
+.case .after .lbl { color: var(--accent); }
+.case .before p { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 50%, transparent); }
+.case p { margin: 0; font-size: 15.5px; line-height: 1.45; }
+.case .after p { font-weight: 600; }
+.case .arrow { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; }
+
+/* Protocols */
+.protocols { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px solid var(--ink); }
+.protocol { padding: 30px 24px 34px 0; border-bottom: 1px solid var(--line); display: grid; gap: 12px; align-content: start; }
+.protocol + .protocol { padding-left: 24px; border-left: 1px solid var(--line); }
+.protocol .code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+.protocol .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); display: grid; place-items: center; }
+.protocol .ico svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.protocol h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.protocol p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.protocol ul { margin: 6px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 13px; display: grid; gap: 5px; }
+.protocol li::before { content: "— "; color: var(--accent); }
+
+/* Bancada (code lab) */
+.bench { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.bench-grid { display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start; }
+.tabs { display: grid; gap: 8px; }
+.tab { text-align: left; background: transparent; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; cursor: pointer; color: var(--ink); font-family: var(--font-body); display: grid; gap: 4px; transition: border-color .15s ease, background .15s ease; }
+.tab .t-code { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.tab .t-title { font-weight: 600; font-size: 17px; }
+.tab .t-desc { font-size: 14px; color: var(--muted); line-height: 1.4; }
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.tab[aria-selected="true"] .t-code { color: var(--accent); }
+.panel[hidden] { display: none; }
+
+/* Diferenciais */
+.diffs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.diff { background: var(--bg); padding: 30px 28px; display: grid; gap: 10px; align-content: start; }
+.diff .num { font-family: var(--font-display); font-weight: 800; font-size: 44px; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+.diff h3 { font-size: 21px; letter-spacing: -0.015em; }
+.diff p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+/* Process */
+.process { background: var(--ink); color: var(--bg); }
+.process .sec-head p { color: color-mix(in srgb, var(--bg) 70%, transparent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; }
+.step { position: relative; padding: 26px 24px 28px; border: 1px solid color-mix(in srgb, var(--bg) 18%, transparent); border-radius: 14px; }
+.step .phase { font-family: var(--font-mono); font-size: 12px; color: var(--accent); display: flex; justify-content: space-between; }
+.step h3 { font-size: 23px; margin: 14px 0 10px; letter-spacing: -0.02em; }
+.step p { margin: 0; font-size: 15.5px; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+.step .out { margin-top: 16px; font-family: var(--font-mono); font-size: 12px; color: color-mix(in srgb, var(--bg) 60%, transparent); border-top: 1px dashed color-mix(in srgb, var(--bg) 20%, transparent); padding-top: 12px; }
+.step .out b { color: var(--bg); font-weight: 500; }
+
+/* Academy */
+.academy .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: center; }
+.academy-card { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 20px; padding: 40px; display: grid; gap: 18px; position: relative; box-shadow: 10px 10px 0 var(--accent); }
+.academy-card h2 { font-size: clamp(30px, 3.6vw, 46px); letter-spacing: -0.03em; }
+.academy-card p { margin: 0; color: var(--muted); }
+.academy-card .btn { justify-self: start; }
+.trail { display: flex; flex-wrap: wrap; gap: 8px; }
+.trail span { font-family: var(--font-mono); font-size: 12.5px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
+.academy-copy p { color: var(--muted); margin: 0 0 16px; max-width: 32em; }
+.academy-copy h2 { font-size: clamp(34px, 4.4vw, 56px); letter-spacing: -0.03em; margin: 14px 0 20px; }
+
+/* FAQ */
+.faq-list { display: grid; gap: 10px; max-width: 880px; }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0 22px; }
+details[open] { border-color: var(--accent); }
+summary { cursor: pointer; list-style: none; padding: 20px 0; font-weight: 600; font-size: 17.5px; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); font-size: 22px; transition: transform .2s ease; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { margin: 0 0 20px; color: var(--muted); max-width: 46em; }
+
+/* Contact / briefing */
+.contact { border-top: 1.5px solid var(--ink); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: start; }
+.contact h2 { font-size: clamp(40px, 5.6vw, 72px); font-weight: 800; letter-spacing: -0.035em; }
+.contact h2 em { font-style: normal; color: var(--accent); }
+.channels { display: grid; gap: 10px; margin-top: 32px; }
+.channel { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+.channel:hover { border-color: var(--accent); transform: translateX(4px); }
+.channel .label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); display: block; letter-spacing: .06em; }
+.channel .value { font-weight: 600; font-size: 16.5px; word-break: break-word; }
+.channel .arrow { color: var(--accent); font-size: 20px; }
+
+.briefing { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 30px; display: grid; gap: 16px; }
+.briefing-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.briefing-head h3 { font-size: 24px; letter-spacing: -0.02em; }
+.briefing-head span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 500; }
+.field input, .field select, .field textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; width: 100%; }
+.field textarea { min-height: 110px; resize: vertical; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.result { display: none; gap: 12px; padding: 18px; border-radius: 12px; background: var(--accent-soft); border: 1px dashed var(--accent); }
+.result.show { display: grid; }
+.result pre { margin: 0; white-space: pre-wrap; font-family: var(--font-mono); font-size: 13px; color: var(--ink); }
+.result .acts { display: flex; gap: 10px; flex-wrap: wrap; }
+.result .btn { padding: 10px 16px; font-size: 15px; }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+
+footer { border-top: 1px solid var(--line); padding: 36px 0 44px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+footer .brand-name { font-size: 18px; color: var(--ink); }
+
+@media (max-width: 1000px) {
+  .protocols { grid-template-columns: repeat(2, 1fr); }
+  .protocol:nth-child(3) { padding-left: 0; border-left: 0; }
+  .diffs { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  .hero .wrap, .academy .wrap, .contact-grid, .bench-grid { grid-template-columns: 1fr; }
+  .cases { grid-template-columns: 1fr; }
+  .sec-head { grid-template-columns: 1fr; gap: 8px; }
+  .sec-head p { grid-column: 1; }
+  .tabs { grid-template-columns: repeat(2, 1fr); }
+  nav.links a:not(.nav-cta) { display: none; }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 18px; }
+  .hero { padding: 48px 0 64px; }
+  section.block { padding: 68px 0; }
+  .protocols, .diffs, .steps, .tabs, .row2 { grid-template-columns: 1fr; }
+  .protocol, .protocol + .protocol { padding: 24px 0; border-left: 0; }
+  .case { grid-template-columns: 1fr; }
+  .case .arrow { transform: rotate(90deg); }
+  .academy-card { padding: 28px; box-shadow: 6px 6px 0 var(--accent); }
+  .briefing { padding: 22px; }
+  .window pre { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Ventura Lab, início">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="9" fill="var(--ink)"/>
+        <path d="M10 11l10 18 10-18" fill="none" stroke="var(--bg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="30" cy="29.5" r="3" fill="var(--accent)"/>
+      </svg>
+      <span class="brand-name">Ventura<span>Lab</span></span>
+    </a>
+    <nav class="links" aria-label="Seções">
+      <a href="#servicos">Serviços</a>
+      <a href="#bancada">Bancada</a>
+      <a href="#processo">Processo</a>
+      <a href="#academy">Academy</a>
+      <a href="#faq">Dúvidas</a>
+      <a class="nav-cta" href="#contato">Orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="tag">Fábrica de software TOTVS Protheus</div>
+        <h1>Seu Protheus, <em>sob medida.</em></h1>
+        <p class="lead">A Ventura Lab desenvolve customizações em AdvPL e TLPP para empresas que precisam que o ERP siga o processo delas, e não o contrário. Do levantamento à entrega, com código limpo e documentado.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#contato">Montar meu briefing →</a>
+          <a class="btn btn-ghost" href="#bancada">Ver código na bancada</a>
+        </div>
+        <div class="hero-facts">
+          <div><b>AdvPL + TLPP</b><span>do legado ao moderno</span></div>
+          <div><b>100% remoto</b><span>atendimento em todo o Brasil</span></div>
+          <div><b>Escopo fechado</b><span>prazo e valor antes de começar</span></div>
+        </div>
+      </div>
+
+      <figure class="window" aria-label="Exemplo de código TLPP">
+        <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-001</b> · PedStatus.tlpp</span><span>TLPP · REST</span></div>
+<pre><span class="l"><span class="k">#include</span> <span class="s">"tlpp-core.th"</span></span><span class="l"><span class="k">#include</span> <span class="s">"tlpp-rest.th"</span></span><span class="l"> </span><span class="l"><span class="k">namespace</span> ventura.lab</span><span class="l"> </span><span class="l"><span class="c">// Regra de negócio do cliente, exposta via API</span></span><span class="l"><span class="n">@Get</span>(<span class="s">"/api/v1/pedido/status"</span>)</span><span class="l"><span class="k">User Function</span> <span class="f">PedStatus</span>()</span><span class="l">    <span class="k">Local</span> oResp := <span class="f">JsonObject</span>():<span class="f">New</span>()</span><span class="l"> </span><span class="l">    oResp[<span class="s">"status"</span>] := <span class="s">"entregue"</span></span><span class="l">    oResp[<span class="s">"prazo"</span>]  := <span class="s">"no combinado"</span></span><span class="l"> </span><span class="l">    oRest:<span class="f">setResponse</span>( oResp:<span class="f">toJson</span>() )</span><span class="l"><span class="k">Return</span> .T.<span class="cursor" aria-hidden="true"></span></span></pre>
+        <div class="window-foot"><span class="ok">✓ compilado sem warnings</span><span>UTF-8 · TLPP</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Tecnologias: AdvPL, TLPP, MVC, FWMBrowse, TReport, REST, Pontos de entrada, Webservices, Jobs, FWFormView">
+    <div class="marquee-track" aria-hidden="true">
+      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>REST / JSON</span><span>Pontos de entrada</span><span>Webservices</span><span>Jobs agendados</span><span>FWFormView</span>
+      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>REST / JSON</span><span>Pontos de entrada</span><span>Webservices</span><span>Jobs agendados</span><span>FWFormView</span>
+    </div>
+  </div>
+
+  <section class="block" id="problemas">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">01 / DIAGNÓSTICO</div>
+        <div>
+          <h2>Problemas que a gente resolve</h2>
+          <p>Se algum destes cenários parece familiar, o Protheus de vocês tem espaço para trabalhar melhor.</p>
+        </div>
+      </div>
+      <div class="cases">
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Controle paralelo em planilha porque o Protheus "não tem essa tela".</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Cadastro MVC dentro do ERP, integrado ao resto do processo.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Relatório exportado, filtrado e montado na mão todo fim de mês.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>TReport com os filtros e o layout que a gestão realmente usa.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Dado digitado duas vezes: uma no Protheus, outra no outro sistema.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Integração via API REST, com log de cada envio.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Fonte antigo que ninguém quer mexer porque "pode quebrar tudo".</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Code review, refatoração e documentação para evoluir sem medo.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="servicos" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">02 / SERVIÇOS</div>
+        <div>
+          <h2>O que sai do laboratório</h2>
+          <p>Cada serviço é um protocolo: escopo claro, entrega testada e documentação que outro desenvolvedor consegue ler depois.</p>
+        </div>
+      </div>
+      <div class="protocols">
+        <article class="protocol">
+          <div class="code"><span>PRT-01</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 13h8M8 16h5"/></svg></div>
+          <h3>Rotinas e telas</h3>
+          <p>Novas rotinas e telas que encaixam no fluxo do usuário.</p>
+          <ul><li>Cadastros MVC</li><li>Browses e wizards</li><li>Pontos de entrada</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PRT-02</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 17v-3M12 17v-6M15 17v-4"/></svg></div>
+          <h3>Relatórios</h3>
+          <p>Informação certa, no formato que a operação usa.</p>
+          <ul><li>TReport e impressões</li><li>Exportação para Excel</li><li>Layouts personalizados</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PRT-03</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg></div>
+          <h3>Integrações</h3>
+          <p>Protheus conversando com outros sistemas.</p>
+          <ul><li>APIs REST em TLPP</li><li>Webservices</li><li>Jobs e automações</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PRT-04</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></div>
+          <h3>Manutenção</h3>
+          <p>Fontes existentes revisados, corrigidos e evoluídos.</p>
+          <ul><li>Code review</li><li>Correção de bugs</li><li>Migração para TLPP</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block bench" id="bancada">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">03 / BANCADA</div>
+        <div>
+          <h2>Amostras do laboratório</h2>
+          <p>Trechos do tipo de código que a gente escreve todo dia. Escolha um experimento para ver.</p>
+        </div>
+      </div>
+      <div class="bench-grid">
+        <div class="tabs" role="tablist" aria-label="Exemplos de código">
+          <button class="tab" role="tab" id="tab-mvc" aria-controls="p-mvc" aria-selected="true">
+            <span class="t-code">EXP-101 · MVC</span><span class="t-title">Cadastro MVC</span><span class="t-desc">Modelo de dados com chave e validação.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-rel" aria-controls="p-rel" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-202 · TREPORT</span><span class="t-title">Relatório</span><span class="t-desc">Seções e células configuráveis pelo usuário.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-pe" aria-controls="p-pe" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-303 · PE</span><span class="t-title">Ponto de entrada</span><span class="t-desc">Regra do cliente sem alterar fonte padrão.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-job" aria-controls="p-job" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-404 · JOB</span><span class="t-title">Automação</span><span class="t-desc">Rotina agendada que roda sozinha.</span>
+          </button>
+        </div>
+
+        <div>
+          <figure class="window panel" role="tabpanel" id="p-mvc" aria-labelledby="tab-mvc" style="margin:0">
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-101</b> · VLCAD01.prw</span><span>AdvPL · MVC</span></div>
+<pre><span class="l"><span class="k">Static Function</span> <span class="f">ModelDef</span>()</span><span class="l">    <span class="k">Local</span> oStru  := <span class="f">FWFormStruct</span>( 1, <span class="s">"ZA1"</span> )</span><span class="l">    <span class="k">Local</span> oModel := <span class="f">MPFormModel</span>():<span class="f">New</span>( <span class="s">"VLCAD01M"</span>, , {|o| <span class="f">VldTudo</span>(o)} )</span><span class="l"> </span><span class="l">    oModel:<span class="f">AddFields</span>( <span class="s">"ZA1MASTER"</span>, , oStru )</span><span class="l">    oModel:<span class="f">SetPrimaryKey</span>( { <span class="s">"ZA1_FILIAL"</span>, <span class="s">"ZA1_COD"</span> } )</span><span class="l">    oModel:<span class="f">SetDescription</span>( <span class="s">"Contratos de Serviço"</span> )</span><span class="l"><span class="k">Return</span> oModel</span><span class="l"> </span><span class="l"><span class="c">// Validação final antes de gravar</span></span><span class="l"><span class="k">Static Function</span> <span class="f">VldTudo</span>( oModel )</span><span class="l">    <span class="k">Local</span> dFim := oModel:<span class="f">GetValue</span>( <span class="s">"ZA1MASTER"</span>, <span class="s">"ZA1_DTFIM"</span> )</span><span class="l"><span class="k">Return</span> dFim &gt;= <span class="f">dDataBase</span></span></pre>
+            <div class="window-foot"><span class="ok">✓ modelo validado</span><span>ModelDef · ViewDef · MenuDef</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-rel" aria-labelledby="tab-rel" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-202</b> · VLREL01.prw</span><span>AdvPL · TReport</span></div>
+<pre><span class="l"><span class="k">Static Function</span> <span class="f">ReportDef</span>()</span><span class="l">    <span class="k">Local</span> oReport := <span class="f">TReport</span>():<span class="f">New</span>( <span class="s">"VLREL01"</span>, <span class="s">"Faturamento por Cliente"</span>,;</span><span class="l">                       <span class="s">"VLREL01"</span>, {|oRep| <span class="f">PrintReport</span>(oRep)} )</span><span class="l">    <span class="k">Local</span> oSec    := <span class="f">TRSection</span>():<span class="f">New</span>( oReport, <span class="s">"Clientes"</span>, { <span class="s">"SA1"</span> } )</span><span class="l"> </span><span class="l">    <span class="f">TRCell</span>():<span class="f">New</span>( oSec, <span class="s">"A1_COD"</span>,  <span class="s">"SA1"</span> )</span><span class="l">    <span class="f">TRCell</span>():<span class="f">New</span>( oSec, <span class="s">"A1_NOME"</span>, <span class="s">"SA1"</span> )</span><span class="l">    <span class="f">TRCell</span>():<span class="f">New</span>( oSec, <span class="s">"TOTAL"</span>, , <span class="s">"Total"</span>, <span class="s">"@E 999,999,999.99"</span>, 15 )</span><span class="l"> </span><span class="l">    <span class="c">// Totalizador no fim da seção</span></span><span class="l">    <span class="f">TRFunction</span>():<span class="f">New</span>( oSec:<span class="f">Cell</span>(<span class="s">"TOTAL"</span>), , <span class="s">"SUM"</span> )</span><span class="l"><span class="k">Return</span> oReport</span></pre>
+            <div class="window-foot"><span class="ok">✓ pronto para imprimir ou exportar</span><span>PDF · Planilha · Spool</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-pe" aria-labelledby="tab-pe" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-303</b> · MT410TOK.prw</span><span>AdvPL · Ponto de entrada</span></div>
+<pre><span class="l"><span class="c">// Validação na confirmação do pedido de venda</span></span><span class="l"><span class="k">User Function</span> <span class="f">MT410TOK</span>()</span><span class="l">    <span class="k">Local</span> lRet := .T.</span><span class="l"> </span><span class="l">    <span class="k">If</span> M-&gt;C5_TIPO == <span class="s">"N"</span> .And. <span class="f">Empty</span>( M-&gt;C5_XCONTR )</span><span class="l">        <span class="f">Help</span>( , , <span class="s">"VLAB"</span>, , <span class="s">"Informe o contrato do cliente."</span>, 1, 0 )</span><span class="l">        lRet := .F.</span><span class="l">    <span class="k">EndIf</span></span><span class="l"> </span><span class="l"><span class="k">Return</span> lRet</span></pre>
+            <div class="window-foot"><span class="ok">✓ sem alterar fonte padrão</span><span>atualizações TOTVS continuam seguras</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-job" aria-labelledby="tab-job" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-404</b> · VLJOB01.tlpp</span><span>TLPP · Schedule</span></div>
+<pre><span class="l"><span class="c">// Job diário: avisa o financeiro sobre títulos vencidos</span></span><span class="l"><span class="k">User Function</span> <span class="f">VLJOB01</span>( aParam )</span><span class="l">    <span class="k">Local</span> cAlias := <span class="f">GetNextAlias</span>()</span><span class="l"> </span><span class="l">    <span class="f">RpcSetEnv</span>( aParam[1], aParam[2] )</span><span class="l"> </span><span class="l">    <span class="f">BeginSql</span> <span class="k">Alias</span> cAlias</span><span class="l">        <span class="k">SELECT</span> E1_NUM, E1_CLIENTE, E1_SALDO <span class="k">FROM</span> %table:SE1%</span><span class="l">        <span class="k">WHERE</span> E1_VENCREA &lt; %exp:<span class="f">dDataBase</span>% <span class="k">AND</span> E1_SALDO &gt; 0</span><span class="l">    <span class="f">EndSql</span></span><span class="l"> </span><span class="l">    <span class="f">EnviaAviso</span>( cAlias )</span><span class="l">    <span class="f">RpcClearEnv</span>()</span><span class="l"><span class="k">Return</span></span></pre>
+            <div class="window-foot"><span class="ok">✓ agendado no Schedule</span><span>todo dia · 07:00</span></div>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="diferenciais">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">04 / MÉTODO</div>
+        <div>
+          <h2>Por que contratar um laboratório</h2>
+          <p>Customização boa não é só funcionar hoje. É continuar funcionando na próxima atualização do Protheus.</p>
+        </div>
+      </div>
+      <div class="diffs">
+        <div class="diff"><div class="num">01</div><h3>Fonte padrão intocado</h3><p>Tudo via pontos de entrada, MVC e fontes próprios. As atualizações da TOTVS seguem seguras.</p></div>
+        <div class="diff"><div class="num">02</div><h3>Código que outro dev lê</h3><p>Nomes claros, padrão de projeto e comentários onde importa. Sem dependência de uma pessoa só.</p></div>
+        <div class="diff"><div class="num">03</div><h3>Documentação entregue</h3><p>Cada entrega vem com descrição do que foi feito, parâmetros criados e como testar.</p></div>
+        <div class="diff"><div class="num">04</div><h3>Teste antes de produção</h3><p>Validação em ambiente de homologação com o usuário-chave antes de subir.</p></div>
+        <div class="diff"><div class="num">05</div><h3>AdvPL e TLPP</h3><p>Mantemos o legado em AdvPL e escrevemos o novo em TLPP, com namespaces e REST nativo.</p></div>
+        <div class="diff"><div class="num">06</div><h3>Quem faz, ensina</h3><p>O mesmo conhecimento vira aula aberta na Ventura Academy. Transparência sobre como trabalhamos.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block process" id="processo">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">05 / PROCESSO</div>
+        <div>
+          <h2>Do pedido à produção</h2>
+          <p>Quatro etapas, cada uma com uma entrega concreta. Sem surpresa no meio do caminho.</p>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="phase"><span>ETAPA 1</span><span>→</span></div><h3>Diagnóstico</h3><p>Entendemos o processo, o problema e o ambiente Protheus de vocês.</p><div class="out">entrega: <b>análise do cenário</b></div></div>
+        <div class="step"><div class="phase"><span>ETAPA 2</span><span>→</span></div><h3>Especificação</h3><p>Escopo, prazo e valor fechados por escrito antes de qualquer linha de código.</p><div class="out">entrega: <b>proposta e escopo</b></div></div>
+        <div class="step"><div class="phase"><span>ETAPA 3</span><span>→</span></div><h3>Desenvolvimento</h3><p>Código seguindo as boas práticas TOTVS, validado em homologação.</p><div class="out">entrega: <b>fontes + testes</b></div></div>
+        <div class="step"><div class="phase"><span>ETAPA 4</span><span>✓</span></div><h3>Entrega</h3><p>Implantação acompanhada e documentação de tudo que foi feito.</p><div class="out">entrega: <b>em produção</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block academy" id="academy">
+    <div class="wrap">
+      <div class="academy-copy">
+        <div class="sec-num">06 / ACADEMY</div>
+        <h2>Quem constrói, ensina.</h2>
+        <p>O que a gente aprende desenvolvendo para clientes vira aula gratuita na Ventura Academy, o canal de ensino de AdvPL e TLPP.</p>
+        <p>Se você é dev e quer aprender Protheus na prática, comece por lá.</p>
+      </div>
+      <div class="academy-card">
+        <div class="mono" style="font-size:13px; color:var(--muted)">youtube.com/@ventura_academy</div>
+        <h2>Ventura Academy</h2>
+        <p>Trilhas de AdvPL e TLPP do zero ao avançado, com exemplos reais.</p>
+        <div class="trail"><span>Fundamentos AdvPL</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>TLPP</span><span>REST</span></div>
+        <a class="btn btn-primary" href="https://www.youtube.com/@ventura_academy" target="_blank" rel="noopener">Assistir no YouTube ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">07 / DÚVIDAS</div>
+        <div><h2>Perguntas frequentes</h2></div>
+      </div>
+      <div class="faq-list">
+        <details><summary>Vocês atendem empresas de qualquer cidade?</summary><p>Sim. O trabalho é 100% remoto, com acesso ao ambiente de homologação de vocês ou a um ambiente fornecido pela equipe de TI.</p></details>
+        <details><summary>Vocês alteram fontes padrão da TOTVS?</summary><p>Não. Toda customização é feita por pontos de entrada, rotinas próprias e MVC, para que as atualizações do Protheus não quebrem nada.</p></details>
+        <details><summary>Como é feito o orçamento?</summary><p>Depois do diagnóstico, enviamos uma proposta com escopo, prazo e valor fechados. Para demandas contínuas, também dá para combinar um pacote de horas mensal.</p></details>
+        <details><summary>Dá para dar manutenção em fontes feitos por outra pessoa?</summary><p>Dá. Começamos com um code review para entender o que existe, apontar riscos e propor o que corrigir primeiro.</p></details>
+        <details><summary>E se eu precisar de algo além do combinado?</summary><p>Tudo o que está no escopo é entregue. Ajustes e novas demandas fora do escopo são orçados à parte, como um novo projeto ou dentro de um pacote de horas mensal.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block contact" id="contato">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="sec-num">08 / CONTATO</div>
+        <h2 style="margin-top:14px">Tem um projeto Protheus <em>parado?</em></h2>
+        <p style="color:var(--muted); max-width:30em; margin-top:20px">Monte o briefing ao lado e mande pelo WhatsApp, ou fale direto por um dos canais.</p>
+        <div class="channels">
+          <a class="channel" id="ch-whats" href="https://wa.me/5511994301384?text=Ol%C3%A1%2C%20Ventura%20Lab!%20Vim%20pelo%20site." target="_blank" rel="noopener">
+            <span><span class="label">WHATSAPP</span><span class="value">(11) 99430-1384</span></span><span class="arrow">→</span>
+          </a>
+          <a class="channel" href="mailto:venturalab.contato@gmail.com">
+            <span><span class="label">E-MAIL</span><span class="value">venturalab.contato@gmail.com</span></span><span class="arrow">→</span>
+          </a>
+          <a class="channel" href="https://www.linkedin.com/company/venturalab_" target="_blank" rel="noopener">
+            <span><span class="label">LINKEDIN</span><span class="value">Ventura Lab</span></span><span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <form class="briefing" id="briefing" novalidate>
+        <div class="briefing-head"><h3>Briefing rápido</h3><span>leva 1 minuto</span></div>
+        <div class="row2">
+          <div class="field"><label for="b-nome">Seu nome</label><input id="b-nome" name="nome" autocomplete="name" required></div>
+          <div class="field"><label for="b-emp">Empresa</label><input id="b-emp" name="empresa" autocomplete="organization"></div>
+        </div>
+        <div class="field">
+          <span style="font-size:14px; font-weight:500" id="b-tipo-l">O que vocês precisam?</span>
+          <div class="chips" role="group" aria-labelledby="b-tipo-l">
+            <button type="button" class="chip" aria-pressed="false">Nova rotina / tela</button>
+            <button type="button" class="chip" aria-pressed="false">Relatório</button>
+            <button type="button" class="chip" aria-pressed="false">Integração / API</button>
+            <button type="button" class="chip" aria-pressed="false">Manutenção</button>
+            <button type="button" class="chip" aria-pressed="false">Ainda não sei</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="b-urg">Prazo</label>
+          <select id="b-urg" name="prazo">
+            <option>Sem pressa</option>
+            <option>Este mês</option>
+            <option>Urgente</option>
+          </select>
+        </div>
+        <div class="field"><label for="b-desc">Conte o cenário</label><textarea id="b-desc" name="descricao" placeholder="Ex.: hoje controlamos contratos numa planilha e queremos isso dentro do Protheus, ligado ao faturamento."></textarea></div>
+        <button class="btn btn-primary" type="submit" style="justify-self:start">Gerar mensagem →</button>
+        <div class="result" id="result" aria-live="polite">
+          <pre id="msg"></pre>
+          <div class="acts">
+            <a class="btn btn-primary" id="send-wa" href="#" target="_blank" rel="noopener">Abrir no WhatsApp ↗</a>
+            <button class="btn btn-ghost" type="button" id="copy">Copiar texto</button>
+          </div>
+        </div>
+        <p class="hint" id="b-hint">Seu nome é obrigatório para gerar a mensagem.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="brand-name">Ventura<span>Lab</span></span>
+    <span>© 2026 Ventura Lab · venturalab.tec.br · Desenvolvimento TOTVS Protheus em AdvPL e TLPP</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var WHATS = "5511994301384";
+
+  // Abas da bancada
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t); });
+    t.addEventListener('keydown', function (e) {
+      var d = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var n = tabs[(i + d + tabs.length) % tabs.length];
+      select(n); n.focus();
+    });
+  });
+
+  // Chips
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    });
+  });
+
+  // Briefing -> mensagem
+  var form = document.getElementById('briefing');
+  var text = '';
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nome = document.getElementById('b-nome').value.trim();
+    var hint = document.getElementById('b-hint');
+    if (!nome) { hint.style.color = 'var(--accent)'; document.getElementById('b-nome').focus(); return; }
+    hint.style.color = '';
+    var emp = document.getElementById('b-emp').value.trim();
+    var tipos = Array.prototype.slice.call(document.querySelectorAll('.chip[aria-pressed="true"]')).map(function (c) { return c.textContent; });
+    var prazo = document.getElementById('b-urg').value;
+    var desc = document.getElementById('b-desc').value.trim();
+    text = 'Olá, Ventura Lab! Sou ' + nome + (emp ? ', da ' + emp : '') + '.\n' +
+      'Preciso de: ' + (tipos.length ? tipos.join(', ') : 'ainda não sei') + '.\n' +
+      'Prazo: ' + prazo + '.' + (desc ? '\n\nCenário: ' + desc : '');
+    document.getElementById('msg').textContent = text;
+    document.getElementById('send-wa').href = 'https://wa.me/' + WHATS + '?text=' + encodeURIComponent(text);
+    document.getElementById('result').classList.add('show');
+  });
+
+  document.getElementById('copy').addEventListener('click', function () {
+    var b = this;
+    try {
+      navigator.clipboard.writeText(text).then(function () { b.textContent = 'Copiado ✓'; }, function () { b.textContent = 'Selecione e copie o texto acima'; });
+    } catch (err) { b.textContent = 'Selecione e copie o texto acima'; }
+  });
+})();
+</script>
+</body>
+</html>
