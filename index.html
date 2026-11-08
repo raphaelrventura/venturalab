@@ -144,9 +144,9 @@ section.block { padding: 104px 0; }
 .case .arrow { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; }
 
 /* Protocols */
-.protocols { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px solid var(--ink); }
+.protocols { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1.5px solid var(--ink); }
 .protocol { padding: 30px 24px 34px 0; border-bottom: 1px solid var(--line); display: grid; gap: 12px; align-content: start; }
-.protocol + .protocol { padding-left: 24px; border-left: 1px solid var(--line); }
+.protocol:not(:nth-child(3n+1)) { padding-left: 24px; border-left: 1px solid var(--line); }
 .protocol .code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
 .protocol .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); display: grid; place-items: center; }
 .protocol .ico svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -158,6 +158,7 @@ section.block { padding: 104px 0; }
 /* Bancada (code lab) */
 .bench { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .bench-grid { display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start; }
+.bench-grid > div:last-child { position: sticky; top: 84px; }
 .tabs { display: grid; gap: 8px; }
 .tab { text-align: left; background: transparent; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; cursor: pointer; color: var(--ink); font-family: var(--font-body); display: grid; gap: 4px; transition: border-color .15s ease, background .15s ease; }
 .tab .t-code { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
@@ -244,12 +245,15 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
 
 @media (max-width: 1000px) {
   .protocols { grid-template-columns: repeat(2, 1fr); }
+  .protocol:not(:nth-child(3n+1)) { padding-left: 0; border-left: 0; }
+  .protocol:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--line); }
   .protocol:nth-child(3) { padding-left: 0; border-left: 0; }
   .diffs { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 900px) {
   .hero .wrap, .academy .wrap, .contact-grid, .bench-grid { grid-template-columns: 1fr; }
+  .bench-grid > div:last-child { position: static; }
   .cases { grid-template-columns: 1fr; }
   .sec-head { grid-template-columns: 1fr; gap: 8px; }
   .sec-head p { grid-column: 1; }
@@ -262,7 +266,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   .hero { padding: 48px 0 64px; }
   section.block { padding: 68px 0; }
   .protocols, .diffs, .steps, .tabs, .row2 { grid-template-columns: 1fr; }
-  .protocol, .protocol + .protocol { padding: 24px 0; border-left: 0; }
+  .protocol, .protocol:nth-child(n) { padding: 24px 0; border-left: 0; }
   .case { grid-template-columns: 1fr; }
   .case .arrow { transform: rotate(90deg); }
   .academy-card { padding: 28px; box-shadow: 6px 6px 0 var(--accent); }
@@ -324,10 +328,10 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
     </div>
   </section>
 
-  <div class="marquee" aria-label="Tecnologias: AdvPL, TLPP, MVC, FWMBrowse, TReport, REST, Pontos de entrada, Webservices, Jobs, FWFormView">
+  <div class="marquee" aria-label="Tecnologias: AdvPL, TLPP, MVC, FWMBrowse, SmartView, TReport, REST, PO UI, ExecAuto, Pontos de entrada, Workflow, Jobs, Embedded SQL, Virada de release">
     <div class="marquee-track" aria-hidden="true">
-      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>REST / JSON</span><span>Pontos de entrada</span><span>Webservices</span><span>Jobs agendados</span><span>FWFormView</span>
-      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>REST / JSON</span><span>Pontos de entrada</span><span>Webservices</span><span>Jobs agendados</span><span>FWFormView</span>
+      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>SmartView</span><span>TReport</span><span>REST / JSON</span><span>PO UI</span><span>ExecAuto</span><span>Pontos de entrada</span><span>Workflow</span><span>Jobs agendados</span><span>Embedded SQL</span><span>Virada de release</span>
+      <span>AdvPL</span><span>TLPP</span><span>MVC</span><span>FWMBrowse</span><span>SmartView</span><span>TReport</span><span>REST / JSON</span><span>PO UI</span><span>ExecAuto</span><span>Pontos de entrada</span><span>Workflow</span><span>Jobs agendados</span><span>Embedded SQL</span><span>Virada de release</span>
     </div>
   </div>
 
@@ -361,6 +365,36 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
           <div class="arrow" aria-hidden="true">→</div>
           <div class="side after"><span class="lbl">DEPOIS</span><p>Code review, refatoração e documentação para evoluir sem medo.</p></div>
         </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Cada pedido da gestão vira um relatório novo, e ninguém consegue cruzar os dados sozinho.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Visões no SmartView: o próprio usuário filtra, agrupa e exporta.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Centenas de registros digitados um a um a partir de uma planilha.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Importação via ExecAuto, com as validações da rotina padrão e log de erros.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Equipe de campo liga para alguém consultar o Protheus por ela.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Tela web em PO UI, acessada pelo navegador ou pelo celular.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Aprovação parada esperando alguém lembrar de abrir o sistema.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Workflow por e-mail: o aprovador recebe, decide e o Protheus atualiza.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Rotina de fechamento que leva horas e trava os usuários.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Código e queries otimizados, com o ambiente analisado de ponta a ponta.</p></div>
+        </div>
+        <div class="case">
+          <div class="side before"><span class="lbl">ANTES</span><p>Atualização de release adiada há anos por medo de quebrar as customizações.</p></div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="side after"><span class="lbl">DEPOIS</span><p>Virada planejada: fontes compatibilizados, testes em homologação e subida acompanhada.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -385,23 +419,37 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
         <article class="protocol">
           <div class="code"><span>PRT-02</span></div>
           <div class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 17v-3M12 17v-6M15 17v-4"/></svg></div>
-          <h3>Relatórios</h3>
+          <h3>Relatórios e BI</h3>
           <p>Informação certa, no formato que a operação usa.</p>
-          <ul><li>TReport e impressões</li><li>Exportação para Excel</li><li>Layouts personalizados</li></ul>
+          <ul><li>Relatórios e visões no SmartView</li><li>TReport e impressões</li><li>Exportação para Excel</li></ul>
         </article>
         <article class="protocol">
           <div class="code"><span>PRT-03</span></div>
           <div class="ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg></div>
-          <h3>Integrações</h3>
-          <p>Protheus conversando com outros sistemas.</p>
-          <ul><li>APIs REST em TLPP</li><li>Webservices</li><li>Jobs e automações</li></ul>
+          <h3>Integrações e automação</h3>
+          <p>Protheus conversando com outros sistemas e trabalhando sozinho.</p>
+          <ul><li>APIs REST em TLPP</li><li>Importações via ExecAuto</li><li>Workflow e e-mails automáticos</li><li>Jobs no Schedule</li></ul>
         </article>
         <article class="protocol">
           <div class="code"><span>PRT-04</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+          <h3>Telas web</h3>
+          <p>O Protheus fora do SmartClient, no navegador e no celular.</p>
+          <ul><li>Apps em PO UI (Angular)</li><li>Portais para equipe externa</li><li>Consumo das APIs do Protheus</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PRT-05</span></div>
           <div class="ico"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></div>
-          <h3>Manutenção</h3>
-          <p>Fontes existentes revisados, corrigidos e evoluídos.</p>
-          <ul><li>Code review</li><li>Correção de bugs</li><li>Migração para TLPP</li></ul>
+          <h3>Manutenção e performance</h3>
+          <p>Fontes existentes revisados, corrigidos e mais rápidos.</p>
+          <ul><li>Code review</li><li>Correção de bugs</li><li>Performance de códigos e queries</li><li>Migração para TLPP</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PRT-06</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/><path d="M12 8v4l3 2"/></svg></div>
+          <h3>Ambiente e versões</h3>
+          <p>Release nova sem perder as customizações, e um ambiente que aguenta o dia a dia.</p>
+          <ul><li>Virada de versão do Protheus</li><li>Compatibilização de fontes</li><li>Instalação de ambientes</li><li>Análise e diagnóstico de ambiente</li></ul>
         </article>
       </div>
     </div>
@@ -430,6 +478,21 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
           <button class="tab" role="tab" id="tab-job" aria-controls="p-job" aria-selected="false" tabindex="-1">
             <span class="t-code">EXP-404 · JOB</span><span class="t-title">Automação</span><span class="t-desc">Rotina agendada que roda sozinha.</span>
           </button>
+          <button class="tab" role="tab" id="tab-sv" aria-controls="p-sv" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-505 · SMARTVIEW</span><span class="t-title">Visão de dados</span><span class="t-desc">Objeto de negócio para relatórios no SmartView.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-api" aria-controls="p-api" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-606 · REST</span><span class="t-title">API de integração</span><span class="t-desc">Endpoint que recebe JSON de outro sistema.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-ea" aria-controls="p-ea" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-707 · EXECAUTO</span><span class="t-title">Importação</span><span class="t-desc">Carga em massa pela rotina padrão.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-po" aria-controls="p-po" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-808 · PO UI</span><span class="t-title">Tela web</span><span class="t-desc">App no navegador consumindo a API.</span>
+          </button>
+          <button class="tab" role="tab" id="tab-perf" aria-controls="p-perf" aria-selected="false" tabindex="-1">
+            <span class="t-code">EXP-909 · PERFORMANCE</span><span class="t-title">Query otimizada</span><span class="t-desc">Um SELECT no lugar de milhares de leituras.</span>
+          </button>
         </div>
 
         <div>
@@ -455,6 +518,36 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
             <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-404</b> · VLJOB01.tlpp</span><span>TLPP · Schedule</span></div>
 <pre><span class="l"><span class="c">// Job diário: avisa o financeiro sobre títulos vencidos</span></span><span class="l"><span class="k">User Function</span> <span class="f">VLJOB01</span>( aParam )</span><span class="l">    <span class="k">Local</span> cAlias := <span class="f">GetNextAlias</span>()</span><span class="l"> </span><span class="l">    <span class="f">RpcSetEnv</span>( aParam[1], aParam[2] )</span><span class="l"> </span><span class="l">    <span class="f">BeginSql</span> <span class="k">Alias</span> cAlias</span><span class="l">        <span class="k">SELECT</span> E1_NUM, E1_CLIENTE, E1_SALDO <span class="k">FROM</span> %table:SE1%</span><span class="l">        <span class="k">WHERE</span> E1_VENCREA &lt; %exp:<span class="f">dDataBase</span>% <span class="k">AND</span> E1_SALDO &gt; 0</span><span class="l">    <span class="f">EndSql</span></span><span class="l"> </span><span class="l">    <span class="f">EnviaAviso</span>( cAlias )</span><span class="l">    <span class="f">RpcClearEnv</span>()</span><span class="l"><span class="k">Return</span></span></pre>
             <div class="window-foot"><span class="ok">✓ agendado no Schedule</span><span>todo dia · 07:00</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-sv" aria-labelledby="tab-sv" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-505</b> · VlFatCliente.tlpp</span><span>TLPP · SmartView</span></div>
+<pre><span class="l"><span class="c">// Objeto de negócio publicado no TOTVS SmartView</span></span><span class="l"><span class="n">@totvsFrameworkTReportsIntegratedProvider</span>(active=.T., team=<span class="s">"SIGAFAT"</span>, tables=<span class="s">"SF2"</span>)</span><span class="l"><span class="k">Class</span> <span class="f">VlFatCliente</span> <span class="k">From</span> IntegratedProvider</span><span class="l">    <span class="k">Public Method</span> <span class="f">new</span>() <span class="k">as</span> object</span><span class="l">    <span class="k">Public Method</span> <span class="f">getSchema</span>() <span class="k">as</span> object</span><span class="l"><span class="k">EndClass</span></span><span class="l"> </span><span class="l"><span class="k">Method</span> <span class="f">getSchema</span>() <span class="k">as</span> object <span class="k">Class</span> VlFatCliente</span><span class="l">    self:<span class="f">addProperty</span>( <span class="s">"cliente"</span>, <span class="s">"Cliente"</span>, <span class="s">"string"</span>, <span class="s">"Código"</span>,      <span class="s">"F2_CLIENTE"</span> )</span><span class="l">    self:<span class="f">addProperty</span>( <span class="s">"total"</span>,   <span class="s">"Total"</span>,   <span class="s">"number"</span>, <span class="s">"Valor bruto"</span>, <span class="s">"F2_VALBRUT"</span> )</span><span class="l"><span class="k">Return</span> self:oSchema</span></pre>
+            <div class="window-foot"><span class="ok">✓ usuário monta a própria visão</span><span>Relatório · Visão · Tabela dinâmica</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-api" aria-labelledby="tab-api" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-606</b> · VLAPI02.tlpp</span><span>TLPP · REST</span></div>
+<pre><span class="l"><span class="c">// Recebe pedidos de um e-commerce ou outro sistema</span></span><span class="l"><span class="n">@Post</span>(<span class="s">"/api/vlab/v1/pedidos"</span>)</span><span class="l"><span class="k">User Function</span> <span class="f">VLAPI02</span>()</span><span class="l">    <span class="k">Local</span> jBody := <span class="f">JsonObject</span>():<span class="f">New</span>()</span><span class="l">    <span class="k">Local</span> cErro := jBody:<span class="f">FromJson</span>( oRest:<span class="f">getBodyRequest</span>() )</span><span class="l"> </span><span class="l">    <span class="k">If</span> !<span class="f">Empty</span>( cErro )</span><span class="l">        oRest:<span class="f">setStatusCode</span>( 400 )</span><span class="l">        <span class="k">Return</span> oRest:<span class="f">setResponse</span>( <span class="s">'{"erro":"JSON inválido"}'</span> )</span><span class="l">    <span class="k">EndIf</span></span><span class="l"> </span><span class="l">    <span class="f">GravaPedido</span>( jBody )</span><span class="l">    oRest:<span class="f">setStatusCode</span>( 201 )</span><span class="l"><span class="k">Return</span> oRest:<span class="f">setResponse</span>( <span class="s">'{"status":"criado"}'</span> )</span></pre>
+            <div class="window-foot"><span class="ok">✓ cada envio registrado em log</span><span>JSON · HTTP 201 / 400</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-ea" aria-labelledby="tab-ea" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-707</b> · VLIMP01.prw</span><span>AdvPL · ExecAuto</span></div>
+<pre><span class="l"><span class="c">// Importa uma linha da planilha como pedido de venda</span></span><span class="l"><span class="k">Static Function</span> <span class="f">ImportaPed</span>( cCliente, cLoja, cProd, nQtd )</span><span class="l">    <span class="k">Local</span> aCab   := {}</span><span class="l">    <span class="k">Local</span> aItens := {}</span><span class="l">    <span class="k">Private</span> lMsErroAuto := .F.</span><span class="l"> </span><span class="l">    <span class="f">aAdd</span>( aCab, { <span class="s">"C5_TIPO"</span>,    <span class="s">"N"</span>,      <span class="k">Nil</span> } )</span><span class="l">    <span class="f">aAdd</span>( aCab, { <span class="s">"C5_CLIENTE"</span>, cCliente, <span class="k">Nil</span> } )</span><span class="l">    <span class="f">aAdd</span>( aCab, { <span class="s">"C5_LOJACLI"</span>, cLoja,    <span class="k">Nil</span> } )</span><span class="l">    <span class="f">aAdd</span>( aItens, { { <span class="s">"C6_PRODUTO"</span>, cProd, <span class="k">Nil</span> }, { <span class="s">"C6_QTDVEN"</span>, nQtd, <span class="k">Nil</span> } } )</span><span class="l"> </span><span class="l">    <span class="f">MSExecAuto</span>( {|x, y, z| <span class="f">MATA410</span>(x, y, z)}, aCab, aItens, 3 )</span><span class="l"><span class="k">Return</span> !lMsErroAuto</span></pre>
+            <div class="window-foot"><span class="ok">✓ mesmas validações da tela padrão</span><span>CSV · Excel · log de erros</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-po" aria-labelledby="tab-po" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-808</b> · aprovacoes.component.ts</span><span>Angular · PO UI</span></div>
+<pre><span class="l"><span class="c">// Tela web de aprovação usando a API do Protheus</span></span><span class="l"><span class="n">@Component</span>({ selector: <span class="s">'vl-aprovacoes'</span>, templateUrl: <span class="s">'./aprovacoes.component.html'</span> })</span><span class="l"><span class="k">export class</span> <span class="f">AprovacoesComponent</span> {</span><span class="l">  <span class="k">readonly</span> service = <span class="s">'/api/vlab/v1/pedidos?status=pendente'</span>;</span><span class="l"> </span><span class="l">  <span class="k">readonly</span> columns: <span class="f">PoTableColumn</span>[] = [</span><span class="l">    { property: <span class="s">'numero'</span>,  label: <span class="s">'Pedido'</span> },</span><span class="l">    { property: <span class="s">'cliente'</span>, label: <span class="s">'Cliente'</span> },</span><span class="l">    { property: <span class="s">'total'</span>,   label: <span class="s">'Total'</span>, type: <span class="s">'currency'</span>, format: <span class="s">'BRL'</span> }</span><span class="l">  ];</span><span class="l"> </span><span class="l">  <span class="k">readonly</span> actions: <span class="f">PoPageAction</span>[] = [</span><span class="l">    { label: <span class="s">'Aprovar'</span>, action: () =&gt; <span class="k">this</span>.<span class="f">aprovar</span>() }</span><span class="l">  ];</span><span class="l">}</span></pre>
+            <div class="window-foot"><span class="ok">✓ funciona no navegador e no celular</span><span>Angular · PO UI · REST</span></div>
+          </figure>
+
+          <figure class="window panel" role="tabpanel" id="p-perf" aria-labelledby="tab-perf" style="margin:0" hidden>
+            <div class="window-head"><span class="dots"><i></i><i></i><i></i></span><span><b>EXP-909</b> · VLFAT02.prw</span><span>AdvPL · Embedded SQL</span></div>
+<pre><span class="l"><span class="c">// Antes: um DbSeek por nota, milhares de idas ao banco</span></span><span class="l"><span class="c">// Depois: uma query só, agregada no próprio banco</span></span><span class="l"><span class="f">BeginSql</span> <span class="k">Alias</span> cAlias</span><span class="l">    <span class="k">SELECT</span> D2_CLIENTE, <span class="f">SUM</span>(D2_TOTAL) TOTAL</span><span class="l">    <span class="k">FROM</span> %table:SD2% SD2</span><span class="l">    <span class="k">WHERE</span> D2_FILIAL = %xFilial:SD2%</span><span class="l">      <span class="k">AND</span> D2_EMISSAO <span class="k">BETWEEN</span> %exp:dIni% <span class="k">AND</span> %exp:dFim%</span><span class="l">      <span class="k">AND</span> SD2.%notDel%</span><span class="l">    <span class="k">GROUP BY</span> D2_CLIENTE</span><span class="l"><span class="f">EndSql</span></span></pre>
+            <div class="window-foot"><span class="ok">✓ processamento feito no banco</span><span>índice · filtro · agregação</span></div>
           </figure>
         </div>
       </div>
@@ -527,6 +620,9 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
         <details><summary>Vocês atendem empresas de qualquer cidade?</summary><p>Sim. O trabalho é 100% remoto, com acesso ao ambiente de homologação de vocês ou a um ambiente fornecido pela equipe de TI.</p></details>
         <details><summary>Vocês alteram fontes padrão da TOTVS?</summary><p>Não. Toda customização é feita por pontos de entrada, rotinas próprias e MVC, para que as atualizações do Protheus não quebrem nada.</p></details>
         <details><summary>Como é feito o orçamento?</summary><p>Depois do diagnóstico, enviamos uma proposta com escopo, prazo e valor fechados. Para demandas contínuas, também dá para combinar um pacote de horas mensal.</p></details>
+        <details><summary>Vocês trabalham com SmartView?</summary><p>Sim. Criamos objetos de negócio em TLPP que alimentam relatórios, visões e tabelas dinâmicas no SmartView, e também levamos relatórios TReport existentes para lá.</p></details>
+        <details><summary>Vocês fazem virada de versão do Protheus?</summary><p>Sim. Levantamos as customizações, ajustamos o que for incompatível com a nova release, testamos em homologação e acompanhamos a subida em produção. Também instalamos e configuramos ambientes.</p></details>
+        <details><summary>O Protheus está lento. Vocês conseguem ajudar?</summary><p>Conseguimos. Analisamos o ambiente e os fontes envolvidos, identificamos o gargalo (código, query, índice ou configuração) e otimizamos o que estiver travando a operação.</p></details>
         <details><summary>Dá para dar manutenção em fontes feitos por outra pessoa?</summary><p>Dá. Começamos com um code review para entender o que existe, apontar riscos e propor o que corrigir primeiro.</p></details>
         <details><summary>E se eu precisar de algo além do combinado?</summary><p>Tudo o que está no escopo é entregue. Ajustes e novas demandas fora do escopo são orçados à parte, como um novo projeto ou dentro de um pacote de horas mensal.</p></details>
       </div>
@@ -562,9 +658,14 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
           <span style="font-size:14px; font-weight:500" id="b-tipo-l">O que vocês precisam?</span>
           <div class="chips" role="group" aria-labelledby="b-tipo-l">
             <button type="button" class="chip" aria-pressed="false">Nova rotina / tela</button>
-            <button type="button" class="chip" aria-pressed="false">Relatório</button>
+            <button type="button" class="chip" aria-pressed="false">Relatório / SmartView</button>
             <button type="button" class="chip" aria-pressed="false">Integração / API</button>
+            <button type="button" class="chip" aria-pressed="false">Importação de dados</button>
+            <button type="button" class="chip" aria-pressed="false">Tela web (PO UI)</button>
+            <button type="button" class="chip" aria-pressed="false">Workflow / automação</button>
             <button type="button" class="chip" aria-pressed="false">Manutenção</button>
+            <button type="button" class="chip" aria-pressed="false">Performance</button>
+            <button type="button" class="chip" aria-pressed="false">Virada de versão / instalação</button>
             <button type="button" class="chip" aria-pressed="false">Ainda não sei</button>
           </div>
         </div>
