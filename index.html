@@ -67,6 +67,10 @@ a { color: inherit; }
 a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; text-wrap: balance; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+/* Itens de grid não podem crescer além da coluna por causa do conteúdo (ex.: código que não quebra linha);
+   sem isso a página vaza para a direita e o celular reduz o zoom da página inteira. */
+.hero .wrap > *, .bench-grid > *, .academy .wrap > *, .contact-grid > *, .cases > *, .case > *, .tabs > * { min-width: 0; }
+body { overflow-x: clip; }
 .mono { font-family: var(--font-mono); }
 
 /* Header */
@@ -274,7 +278,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   .steps { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 900px) {
-  .hero .wrap, .academy .wrap, .contact-grid, .bench-grid { grid-template-columns: 1fr; }
+  .hero .wrap, .academy .wrap, .contact-grid, .bench-grid { grid-template-columns: minmax(0, 1fr); }
   .bench-grid > div:last-child { position: static; }
   .cases { grid-template-columns: 1fr; }
   .sec-head { grid-template-columns: 1fr; gap: 8px; }
@@ -287,7 +291,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   .wrap { padding: 0 18px; }
   .hero { padding: 48px 0 64px; }
   section.block { padding: 68px 0; }
-  .protocols, .diffs, .steps, .tabs, .row2 { grid-template-columns: 1fr; }
+  .protocols, .diffs, .steps, .tabs, .row2 { grid-template-columns: minmax(0, 1fr); }
   .protocol, .protocol:nth-child(n) { padding: 24px 0; border-left: 0; }
   .case { grid-template-columns: 1fr; }
   .case .arrow { transform: rotate(90deg); }
