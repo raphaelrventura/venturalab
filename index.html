@@ -30,6 +30,7 @@
   --accent: #d9730d;
   --accent-soft: rgba(217,115,13,.12);
   --accent-ink: #ffffff;
+  --academy: #b8861b;
   --code-bg: #0f1e26;
   --code-ink: #dbe6ea;
   --grid: rgba(15,30,38,.06);
@@ -41,13 +42,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0c171d; --surface: #13232b; --ink: #e6eef1; --muted: #93a5ad;
-    --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a;
+    --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a; --academy: #e8b54a;
     --code-bg: #071015; --code-ink: #dbe6ea; --grid: rgba(230,238,241,.05); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0c171d; --surface: #13232b; --ink: #e6eef1; --muted: #93a5ad;
-  --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a;
+  --line: #24363f; --accent: #f08a24; --accent-soft: rgba(240,138,36,.14); --accent-ink: #10161a; --academy: #e8b54a;
   --code-bg: #071015; --code-ink: #dbe6ea; --grid: rgba(230,238,241,.05); color-scheme: dark;
 }
 
@@ -193,8 +194,10 @@ section.block { padding: 104px 0; }
 
 /* Academy */
 .academy .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: center; }
-.academy-card { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 20px; padding: 40px; display: grid; gap: 18px; position: relative; box-shadow: 10px 10px 0 var(--accent); }
-.academy-card h2 { font-size: clamp(30px, 3.6vw, 46px); letter-spacing: -0.03em; }
+.academy-card { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 20px; padding: 40px; display: grid; gap: 18px; position: relative; box-shadow: 10px 10px 0 var(--academy); }
+.academy-card h2 { font-size: clamp(30px, 3.6vw, 46px); letter-spacing: -0.03em; display: flex; align-items: center; gap: 14px; }
+.academy-card h2 svg { width: 1.15em; height: 1.15em; flex: none; }
+.academy-card h2 b { color: var(--academy); font-weight: inherit; }
 .academy-card p { margin: 0; color: var(--muted); }
 .academy-card .btn { justify-self: start; }
 .trail { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -622,7 +625,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
       </div>
       <div class="academy-card">
         <div class="mono" style="font-size:13px; color:var(--muted)">youtube.com/@ventura_academy</div>
-        <h2>Ventura Academy</h2>
+        <h2><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="9" fill="var(--ink)"/><path d="M10 29l10-18 10 18" fill="none" stroke="var(--surface)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.6 22.5h8.8" stroke="var(--surface)" stroke-width="3.4" stroke-linecap="round"/><circle cx="30" cy="10.5" r="3" fill="var(--academy)"/></svg><span>Ventura<b>Academy</b></span></h2>
         <p>Trilhas de AdvPL e TLPP do zero ao avançado, com exemplos reais.</p>
         <div class="trail"><span>Fundamentos AdvPL</span><span>MVC</span><span>FWMBrowse</span><span>TReport</span><span>TLPP</span><span>REST</span></div>
         <a class="btn btn-primary" href="https://www.youtube.com/@ventura_academy" target="_blank" rel="noopener">Assistir no YouTube ↗</a>
