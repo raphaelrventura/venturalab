@@ -165,6 +165,18 @@ section.block { padding: 104px 0; }
 .protocol p { margin: 0; color: var(--muted); font-size: 15.5px; }
 .protocol ul { margin: 6px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 13px; display: grid; gap: 5px; }
 .protocol li::before { content: "— "; color: var(--accent); }
+.portal-flow { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 0 40px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); overflow: hidden; }
+.portal-flow > div { padding: 18px 20px; }
+.portal-flow > div + div { border-left: 1px solid var(--line); }
+.portal-flow b { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: 0.06em; font-weight: 500; }
+.portal-flow strong { display: block; font-size: 17px; margin: 4px 0 2px; letter-spacing: -0.01em; }
+.portal-flow span { color: var(--muted); font-size: 14px; }
+.portal-cta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 36px; }
+.portal-cta small { color: var(--muted); font-size: 14px; }
+@media (max-width: 900px) {
+  .portal-flow { grid-template-columns: minmax(0, 1fr); }
+  .portal-flow > div + div { border-left: 0; border-top: 1px solid var(--line); }
+}
 
 /* Bancada (code lab) */
 .bench { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -322,11 +334,11 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
     </a>
     <nav class="links" aria-label="Seções">
       <a href="#servicos">Serviços</a>
+      <a href="#portal">Portal</a>
       <a href="#bancada">Bancada</a>
       <a href="#processo">Processo</a>
       <a href="#academy">Academy</a>
       <a href="#faq">Dúvidas</a>
-      <a href="https://portal.venturalab.tec.br/acesso/cliente-teste" target="_blank" rel="noopener">Portal demo ↗</a>
       <a class="nav-cta" href="#contato">Orçamento</a>
     </nav>
   </div>
@@ -487,10 +499,80 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
     </div>
   </section>
 
+  <section class="block" id="portal" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-num">03 / PORTAL</div>
+        <div>
+          <h2>Um portal de serviços para o seu Protheus</h2>
+          <p>Cadastros e pedidos feitos no navegador, com a marca da sua empresa. Cada área completa a sua parte, o aprovador confere e a gravação acontece no Protheus pelas rotinas padrão, sem digitar duas vezes.</p>
+        </div>
+      </div>
+
+      <div class="portal-flow" aria-label="Como o cadastro anda no portal">
+        <div><b>1 · ABERTURA</b><strong>Pedido simples</strong><span>Só o essencial: documento e nome, ou a descrição do produto.</span></div>
+        <div><b>2 · ÁREAS</b><strong>Cada um na sua parte</strong><span>Cadastro, fiscal, financeiro e contábil completam em paralelo.</span></div>
+        <div><b>3 · APROVAÇÃO</b><strong>Conferência final</strong><span>O aprovador vê tudo junto, aprova ou devolve uma seção.</span></div>
+        <div><b>4 · PROTHEUS</b><strong>Gravado de verdade</strong><span>O Protheus gera o código e aplica as validações da empresa.</span></div>
+      </div>
+
+      <div class="protocols">
+        <article class="protocol">
+          <div class="code"><span>CADASTROS</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 5.5 2 5.5 5"/></svg></div>
+          <h3>Cadastro por áreas</h3>
+          <p>Cliente, fornecedor e produto completos, com cada informação preenchida por quem entende dela.</p>
+          <ul><li>Áreas e campos configuráveis</li><li>Devolução de seção para correção</li><li>Histórico de quem fez o quê</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>VALIDAÇÃO</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.9-8 9-4.8-1.1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+          <h3>Dados conferidos no Protheus</h3>
+          <p>NCM, grupo, unidade, município, condição de pagamento e outros são pesquisados na sua base antes de chegar ao aprovador.</p>
+          <ul><li>Pesquisa nos dados reais</li><li>Erro aparece na hora, não na aprovação</li><li>Gravação pelas rotinas padrão</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>CONSULTAS</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/><path d="M8.5 11h5"/></svg></div>
+          <h3>Consulta com todos os campos</h3>
+          <p>Clientes, fornecedores, produtos, pedidos e títulos, com tudo o que está gravado no Protheus.</p>
+          <ul><li>Detalhe com os campos do dicionário</li><li>Itens dos pedidos</li><li>Busca por qualquer campo</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>FINANCEIRO</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3>Financeiro e estoque</h3>
+          <p>A posição da operação sem abrir o ERP.</p>
+          <ul><li>Contas a receber e a pagar por mês e ano</li><li>Faixas de vencimento e maiores saldos</li><li>Saldo de estoque por armazém</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>PEDIDOS</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 4h3l2.2 11h10.6L21 7H7"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17.5" cy="19" r="1.5"/></svg></div>
+          <h3>Pedidos com aprovação</h3>
+          <p>Pedido de venda e de compra só entram no Protheus depois do OK do aprovador.</p>
+          <ul><li>Aviso de saldo no pedido de venda</li><li>Itens e condição de pagamento</li><li>Erros do Protheus à vista</li></ul>
+        </article>
+        <article class="protocol">
+          <div class="code"><span>SEU AMBIENTE</span></div>
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg></div>
+          <h3>Com a cara da sua empresa</h3>
+          <p>Logo e cores do cliente, perfis de acesso e uma conexão que o próprio administrador configura.</p>
+          <ul><li>Perfis: solicitante, aprovador, consulta, admin</li><li>Código do autenticador para quem aprova</li><li>Tema claro e escuro</li></ul>
+        </article>
+      </div>
+
+      <div class="portal-cta">
+        <a class="btn btn-primary" href="https://portal.venturalab.tec.br/acesso/cliente-teste" target="_blank" rel="noopener">Ver o portal de demonstração ↗</a>
+        <a class="btn btn-ghost" href="#contato">Quero no meu Protheus</a>
+        <small>O portal conversa com o Protheus pelas APIs REST em TLPP, sem acesso direto às tabelas na gravação.</small>
+      </div>
+    </div>
+  </section>
+
   <section class="block bench" id="bancada">
     <div class="wrap">
       <div class="sec-head">
-        <div class="sec-num">03 / BANCADA</div>
+        <div class="sec-num">04 / BANCADA</div>
         <div>
           <h2>Amostras do laboratório</h2>
           <p>Trechos do tipo de código que a gente escreve todo dia. Escolha um experimento para ver.</p>
@@ -589,7 +671,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   <section class="block" id="diferenciais">
     <div class="wrap">
       <div class="sec-head">
-        <div class="sec-num">04 / MÉTODO</div>
+        <div class="sec-num">05 / MÉTODO</div>
         <div>
           <h2>Por que contratar um laboratório</h2>
           <p>Customização boa não é só funcionar hoje. É continuar funcionando na próxima atualização do Protheus.</p>
@@ -609,7 +691,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   <section class="block process" id="processo">
     <div class="wrap">
       <div class="sec-head">
-        <div class="sec-num">05 / PROCESSO</div>
+        <div class="sec-num">06 / PROCESSO</div>
         <div>
           <h2>Do pedido à produção</h2>
           <p>Quatro etapas, cada uma com uma entrega concreta. Sem surpresa no meio do caminho.</p>
@@ -627,7 +709,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   <section class="block academy" id="academy">
     <div class="wrap">
       <div class="academy-copy">
-        <div class="sec-num">06 / ACADEMY</div>
+        <div class="sec-num">07 / ACADEMY</div>
         <h2>Quem constrói, ensina.</h2>
         <p>O que a gente aprende desenvolvendo para clientes vira aula gratuita na Ventura Academy, o canal de ensino de AdvPL e TLPP.</p>
         <p>Se você é dev e quer aprender Protheus na prática, comece por lá.</p>
@@ -645,7 +727,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   <section class="block" id="faq" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <div class="sec-num">07 / DÚVIDAS</div>
+        <div class="sec-num">08 / DÚVIDAS</div>
         <div><h2>Perguntas frequentes</h2></div>
       </div>
       <div class="faq-list">
@@ -665,7 +747,7 @@ footer .brand-name { font-size: 18px; color: var(--ink); }
   <section class="block contact" id="contato">
     <div class="wrap contact-grid">
       <div>
-        <div class="sec-num">08 / CONTATO</div>
+        <div class="sec-num">09 / CONTATO</div>
         <h2 style="margin-top:14px">Tem um projeto Protheus <em>parado?</em></h2>
         <p style="color:var(--muted); max-width:30em; margin-top:20px">Monte o briefing ao lado e mande pelo WhatsApp, ou deixe seu contato para a gente retornar. Se preferir, fale direto por um dos canais.</p>
         <div class="channels">
